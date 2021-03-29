@@ -39,18 +39,20 @@
 
     <v-main>
       <HelloWorld/>
+      <Grid/>
     </v-main>
   </v-app>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld';
-
+import Grid from './Grid';
 export default {
   name: 'App',
 
   components: {
     HelloWorld,
+    Grid
   },
 
   data: () => ({
