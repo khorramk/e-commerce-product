@@ -1,10 +1,16 @@
-# e-commerce-product
+# E Commerce Product App
 
 ## Project setup
 ```
 npm install
 ```
+Run the following command
+```
+cp .env.example .env
 
+```
+Edit the .env file using the api route
+PRODUCT_API=<API>
 ### Compiles and hot-reloads for development
 ```
 npm run serve
