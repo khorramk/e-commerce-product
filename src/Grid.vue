@@ -4,22 +4,24 @@
           <v-col 
           class="mx-auto pa-6 transition-swing" fixed-top>
               <label for="product_selection" class="text-h3">By Price:  </label>
-            <select v-model="selected" id="product_selection" class="elevation-1 pa-2">
-                <option v-for="(foo, i) in products" :key="i" :value="i">{{foo.price}}</option>
+            <select v-model="priceSelected" id="product_selection" class="elevation-1 pa-2">
+                <option v-for="(foo, i) in products" :key="i" :value="foo.price">{{foo.price}}</option>
             </select>
           </v-col>
           <v-col 
           class="mx-auto pa-6 transition-swing" fixed-top>
               <label for="product_selection" class="text-h3">By SKU:  </label>
-            <select v-model="selected" id="product_selection" class="elevation-1 pa-2">
-                <option v-for="(foo, i) in products" :key="i" :value="i">{{foo.price}}</option>
+            <select v-model="skuSelected" id="product_selection" class="elevation-1 pa-2">
+                <option v-for="(foo, i) in products" :key="i" :value="foo.sku">
+                    {{foo.sku}}
+                    </option>
             </select>
           </v-col>
       </v-row>
-    <v-row no-gutter v-if="selectionRender" >
+    <v-row no-gutter v-if="selectionRender && priceSelected !== 'Select'" >
         
       <v-col
-        v-for="(n, i) in getPriceList[selected]"
+        v-for="(n, i) in getProductsByPrice"
         :key="i"
         cols="12"
         sm="6"
@@ -34,7 +36,25 @@
         />
       </v-col>
     </v-row>
-      <v-row no-gutter v-if="selectionRender === false" >
+    <v-row no-gutter v-if="selectionRender && skuSelected !== 'Select'" >
+        
+      <v-col
+        v-for="(n, i) in getProductsBySKU"
+        :key="i"
+        cols="12"
+        sm="6"
+      >
+        <item-card
+            :imgSrc="n.image"
+            :itemName="n.name"
+            :description="n.description"
+            :price="n.price"
+            :stockLevel="n['stock-level']"
+            :sku="n.sku"
+        />
+      </v-col>
+    </v-row>
+      <v-row no-gutter v-else >
         
       <v-col
         v-for="(n, i) in items"
@@ -56,8 +76,7 @@
 
   </v-container>
 </template>
-//TODO make emit and handle onleave event
-//todo reset the page
+
 <script>
 import axios from 'axios';
 import ItemCard from './components/ItemCard.vue';
@@ -67,23 +86,18 @@ export default {
     },
     data: () => ({
         items: {},
-        selected: 0,
-        selectionRender: false
+        priceSelected: 'Select',
+        selectionRender: false,
+        skuSelected: 'Select',
+        selectedSku: ''
     }),
     created() {
         this.fetchItems();
     },
     computed: {
-        getPriceList(){
-            let array = Object.keys(this.items).map((k) => {
-                return [
-                    this.items[k]]});
-           array.sort((a, b) => a - b);
-           return array;
-            },
-
         products(){
             let array = Object.keys(this.items).map((key) => this.items[key]);
+           array.unshift({price: 'Select', sku: 'Select'})
             return array;
         },
         selection: {
@@ -93,6 +107,14 @@ export default {
             set(val) {
                 this.selectionRender = val
             }
+        },
+        getProductsBySKU(){
+            let array = this.products.filter((element) => element.sku === this.skuSelected)  || [];
+            return array;
+        },
+        getProductsByPrice(){
+            let array = this.products.filter((element) => element.price === this.priceSelected)  || [];
+            return array;
         }
     },
     methods: {
@@ -106,8 +128,12 @@ export default {
         },
     },
     watch: {
-        selected() {
-            this.selection = true
+        priceSelected() {
+            this.selection = true;
+        },
+        skuSelected() {
+            
+            this.selection = true;
         }
     }
 }

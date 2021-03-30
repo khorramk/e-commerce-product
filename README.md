@@ -9,8 +9,8 @@ Run the following command
 cp .env.example .env
 
 ```
-Edit the .env file using the api route
-PRODUCT_API=<API>
+Edit the .env file using the api route:
+PRODUCT_API=<YOUR API ROUTE>
 ### Compiles and hot-reloads for development
 ```
 npm run serve
