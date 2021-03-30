@@ -1,9 +1,11 @@
+require('dotenv').config;
+
 
 module.exports = {
   transpileDependencies: [
     'vuetify'
   ],
   devServer: {
-    proxy: 'https://testapi.oglsoftware.co.uk'
-  }
+    proxy: process.env.PRODUCT_API
+  },
 }
